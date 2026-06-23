@@ -43,14 +43,17 @@ function createNumpad() {
                 newButton.setAttribute('id', 'multiply');
                 newButton.classList.add('content');
                 newButton.textContent='*';
+                break;
             case 2:
                 newButton.setAttribute('id', 'subtract');
                 newButton.classList.add('content');
                 newButton.textContent='-';
+                break;
             case 1:
                 newButton.setAttribute('id', 'add');
                 newButton.classList.add('content');
                 newButton.textContent='+';
+                break;
         }
         operandsSide.appendChild(newButton);
     }
@@ -71,6 +74,18 @@ function createDisplay() {
     base.textContent = '0';
 }
 
+function buttonPress(){
+    const display = document.querySelector('.display');
+    let symbol = document.querySelector('.container');
+    symbol.addEventListener('click', (event) => {
+        let targetButton = event.target;
+        display.textContent = targetButton.id;
+
+    })
+}
+
+
 
 createDisplay();
 createNumpad();
+buttonPress();
