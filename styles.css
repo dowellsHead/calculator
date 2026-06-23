@@ -5,14 +5,9 @@
 
 .display {
     display: flex;
-    width: 520px;
+    width: 510px;
     gap: 10px;
-}
-
-.numpad {
-    margin: 2px;
-    height: 40px;
-    width: 40px;
+    margin: 20px;
 }
 
 body {
