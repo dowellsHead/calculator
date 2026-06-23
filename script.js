@@ -64,24 +64,24 @@ function createNumpad() {
 }
 
 function createDisplay() {
-    const base = document.querySelector('.display');
+    const container = document.querySelector('.display');
+    const base = document.createElement('div');
+    base.setAttribute('id', 'screen');
     base.style.height = '150px';
-    base.style.width = '520px';
-    base.style.margin = '20px';
-    base.style.display = 'flex';
+    base.style.flexGrow = '1';
     base.style.border = '1px solid black';
     base.classList.add('content');
     base.textContent = '0';
-}
-
-function buttonPress(){
-    const display = document.querySelector('.display');
-    let symbol = document.querySelector('.container');
-    symbol.addEventListener('click', (event) => {
-        let targetButton = event.target;
-        display.textContent = targetButton.id;
-
+    
+    const clearButton = document.createElement('button');
+    clearButton.classList.add('content');
+    clearButton.textContent = 'erase';
+    clearButton.addEventListener('click', (event) => {
+        base.textContent = '0';
     })
+    
+    container.appendChild(base);
+    container.appendChild(clearButton);
 }
 
 

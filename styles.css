@@ -3,6 +3,12 @@
     width: 520px;
 }
 
+.display {
+    display: flex;
+    width: 520px;
+    gap: 10px;
+}
+
 .numpad {
     margin: 2px;
     height: 40px;
