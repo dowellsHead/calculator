@@ -1,6 +1,6 @@
 function createNumpad() {
     const main = document.querySelector('.container')
-    let buttonSize = 500;
+    let buttonSize = 500/4;
     const numbersSide = document.createElement('div');
     for (let j=12; j>0; j--){
         const newButton = document.createElement('button');
@@ -57,8 +57,20 @@ function createNumpad() {
 
     main.appendChild(numbersSide);
     main.appendChild(operandsSide);
+    
+}
+
+function createDisplay() {
+    const base = document.querySelector('.display');
+    base.style.height = '150px';
+    base.style.width = '520px';
+    base.style.margin = '20px';
+    base.style.display = 'flex';
+    base.style.border = '1px solid black';
+    base.classList.add('content');
+    base.textContent = '0';
 }
 
 
-
+createDisplay();
 createNumpad();

@@ -1,10 +1,10 @@
 .container {
     display: flex;
-    height: 500px;
-    width: 500px;
+    width: 520px;
 }
 
 .numpad {
+    margin: 2px;
     height: 40px;
     width: 40px;
 }
