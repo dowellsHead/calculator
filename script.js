@@ -1,3 +1,19 @@
+function addNumbers(a, b){
+    return a+b;
+}
+
+function subtractNumbers(a, b){
+    return a-b;
+}
+
+function multiplyNumbers(a, b){
+    return a*b;
+}
+
+function divideNumbers(a, b){
+    return b == 0 ? 'begone ye, lest ye divide by zeroeth' : a/b;
+}
+
 function createNumpad() {
     const main = document.querySelector('.container')
     let buttonSize = 500/4;
@@ -36,19 +52,19 @@ function createNumpad() {
         newButton.setAttribute('class', 'operator');
         switch (i){
             case 4:
-                newButton.setAttribute('id', 'button/');
+                newButton.setAttribute('id', 'divide');
                 newButton.textContent='/';
                 break;
             case 3: 
-                newButton.setAttribute('id', 'button*');
+                newButton.setAttribute('id', 'multiply');
                 newButton.textContent='*';
                 break;
             case 2:
-                newButton.setAttribute('id', 'button-');
+                newButton.setAttribute('id', 'subtract');
                 newButton.textContent='-';
                 break;
             case 1:
-                newButton.setAttribute('id', 'button+');
+                newButton.setAttribute('id', 'add');
                 newButton.textContent='+';
                 break;
         }
@@ -77,6 +93,7 @@ function createDisplay() {
     const clearButton = document.createElement('button');
     clearButton.classList.add('content');
     clearButton.textContent = 'clear all';
+    clearButton.setAttribute('id', 'clear')
     clearButton.addEventListener('click', (event) => {
         base.textContent = '0';
     });
@@ -84,6 +101,7 @@ function createDisplay() {
     const eraseButton = document.createElement('button');
     eraseButton.classList.add('content');
     eraseButton.textContent = 'erase last element';
+    eraseButton.setAttribute('id', 'erase');
     eraseButton.addEventListener('click', (event) =>{
         base.textContent = base.textContent.slice(0, -1);
     });
@@ -95,36 +113,76 @@ function createDisplay() {
 
 function buttonPress(){
     const display = document.querySelector('#screen');
+    let displayBuffer = {
+        operand : 0, 
+        operator: 0, 
+        flag : 0
+    };
+    const clearBuffer = document.querySelector('#clear');
+    clearBuffer.addEventListener('click', (e) => {
+        displayBuffer = {
+            operand : 0, 
+            operator: 0, 
+            flag: 0
+        };
+        display.textContent = '0';
+    });
+    
     let symbol = document.querySelector('.container');
     symbol.addEventListener('click', (event) => {
         let targetButton = event.target;
-        display.textContent = convertSignals(display.textContent, targetButton);
-    })
+        display.textContent = convertSignals(display.textContent, targetButton, displayBuffer);
+    });
 }
 
-function convertSignals(displayContent, target) {
-    if (target.className == 'operator') {
-        let prevElem = displayContent.slice(-2, -1);
-        switch(prevElem){
-            case '+':
-            case '-':
-            case '*':
-            case '/':
-                return displayContent;
-                break;
-            default:
-                return displayContent + target.id.slice(-1);
+function convertSignals(displayContent, target, buffer) {
+    if (target.className == 'operand'){
+        if (displayContent == '0' || buffer.flag != 0) {
+            buffer.flag = 0;
+            return target.id.slice(-1); 
+        } else {
+            return displayContent+target.id.slice(-1);
         }
     }
-    else if (target.id == 'dot')
+    else if (target.id == 'dot'){
         return displayContent.includes('.') ? displayContent : displayContent+'.';
-    else if (target.id == 'equals')
-        return 'yay'//compute(displayContent);
-    else if (target.className == 'operand')
-        return displayContent === '0' ? target.id.slice(-1) : displayContent+target.id.slice(-1);
+    }
+    else if (target.className == 'operator'){
+        if (buffer.operator == 0){
+            buffer.operand = displayContent;
+        } else {
+            console.log(buffer);
+            buffer.operand = operate(Number(buffer.operand), Number(displayContent), buffer.operator);
+        }
+        buffer.operator = target.id;
+        buffer.flag = 1;
+        return displayContent;
+    } else if (target.id == 'equals'){
+        displayContent = operate(Number(buffer.operand), Number(displayContent), buffer.operator);
+        buffer.flag = 1;
+        buffer.operand = 0;
+        buffer.operator = 0;
+        return displayContent;
+    }
             
 }
 
+function operate(operandA, operandB, operator){
+    switch (operator){
+        case 'add':
+            return addNumbers(operandA, operandB);
+            break;
+        case 'subtract':
+            return subtractNumbers(operandA, operandB);
+            break;
+        case 'multiply':
+            return multiplyNumbers(operandA, operandB);
+            break;
+        case 'divide':
+            return divideNumbers(operandA, operandB);
+            break;
+    }        
+}
 
 createDisplay();
 createNumpad();
