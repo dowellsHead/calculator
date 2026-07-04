@@ -93,7 +93,7 @@ function createDisplay() {
     const clearButton = document.createElement('button');
     clearButton.classList.add('content');
     clearButton.textContent = 'clear all';
-    clearButton.setAttribute('id', 'clear')
+    clearButton.setAttribute('id', 'clear');
     clearButton.addEventListener('click', (event) => {
         base.textContent = '0';
     });
@@ -106,6 +106,15 @@ function createDisplay() {
         base.textContent = base.textContent.slice(0, -1);
     });
     deletion.appendChild(eraseButton);    
+
+    const signButton = document.createElement('button');
+    signButton.classList.add('content');
+    signButton.textContent = '+/-';
+    signButton.setAttribute('id', 'changeSign');
+    signButton.addEventListener('click', (event) => {
+        base.textContent = base.textContent.slice(0,1) == '-' ? base.textContent.slice(1) : '-' + base.textContent;
+    });
+    deletion.appendChild(signButton);
 
     container.appendChild(base);
     container.appendChild(deletion);
@@ -123,7 +132,7 @@ function buttonPress(){
         displayBuffer = {
             operand : 0, 
             operator: 0, 
-            flag: 0
+            flag: 0,
         };
         display.textContent = '0';
     });
@@ -137,7 +146,7 @@ function buttonPress(){
 
 function convertSignals(displayContent, target, buffer) {
     if (target.className == 'operand'){
-        if (displayContent == '0' || buffer.flag != 0) {
+        if (displayContent === '0' || buffer.flag != 0 ) {
             buffer.flag = 0;
             return target.id.slice(-1); 
         } else {
@@ -145,24 +154,29 @@ function convertSignals(displayContent, target, buffer) {
         }
     }
     else if (target.id == 'dot'){
-        return displayContent.includes('.') ? displayContent : displayContent+'.';
+        console.log('fire', displayContent);
+        return displayContent % 1 === 0 ? displayContent+'.' : displayContent;
     }
     else if (target.className == 'operator'){
         if (buffer.operator == 0){
             buffer.operand = displayContent;
         } else {
-            console.log(buffer);
             buffer.operand = operate(Number(buffer.operand), Number(displayContent), buffer.operator);
         }
         buffer.operator = target.id;
         buffer.flag = 1;
         return displayContent;
     } else if (target.id == 'equals'){
-        displayContent = operate(Number(buffer.operand), Number(displayContent), buffer.operator);
-        buffer.flag = 1;
-        buffer.operand = 0;
-        buffer.operator = 0;
-        return displayContent;
+        if (buffer.operator != 0 && buffer.flag !== 1){
+            displayContent = operate(Number(buffer.operand), Number(displayContent), buffer.operator);
+            buffer.flag = 1;
+            buffer.operand = 0;
+            buffer.operator = 0;
+            return Math.round(displayContent*100)/100;
+        } else {
+            buffer.flag = 1;
+            return 'ERROR';
+        }
     }
             
 }
